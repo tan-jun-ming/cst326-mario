@@ -10,12 +10,16 @@ public class BlockBreaker : MonoBehaviour
     public Texture blank;
     public AudioClip[] dig_sound;
     public AudioClip[] break_sound;
+    public AudioClip brick_sound;
+    public AudioClip coin_sound;
+    public AudioClip pop_sound;
 
     private int break_cooldown = 0;
+    private Transform drop_camera;
     // Start is called before the first frame update
     void Start()
     {
-        
+        drop_camera = GameObject.Find("Camera 4").transform;
     }
 
     // Update is called once per frame
@@ -43,11 +47,13 @@ public class BlockBreaker : MonoBehaviour
 
     public void break_block(Transform block)
     {
+        Block blockscript = ((Block)block.gameObject.GetComponent(typeof(Block)));
+
         if (playermove.get_fps())
         {
             if (block.CompareTag("block") && break_cooldown == 0)
             {
-                int curr_durability = ((Block)block.gameObject.GetComponent(typeof(Block))).damage(1);
+                int curr_durability = blockscript.damage(1);
                 if (curr_durability <= 0)
                 {
                     break_cooldown = 50;
@@ -55,14 +61,7 @@ public class BlockBreaker : MonoBehaviour
             }
         } else
         {
-            if (((Block)block.gameObject.GetComponent(typeof(Block))).coinbox)
-            {
-                Debug.Log("ding");
-            }
-            else if (block.CompareTag("block"))
-            {
-                GameObject.Destroy(block.gameObject);
-            }
+            blockscript.flat_destroy();
         }
         
     }

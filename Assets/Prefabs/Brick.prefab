@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1245006774049705279}
   - component: {fileID: 1245006774049705278}
   - component: {fileID: 1005450124401716159}
-  - component: {fileID: 1155842301298572290}
+  - component: {fileID: -950894222630343502}
   - component: {fileID: 6467267603674485334}
   m_Layer: 0
   m_Name: Brick
@@ -113,7 +113,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1155842301298572290
+--- !u!114 &-950894222630343502
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,6 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_durability: 100
   curr_durability: 0
+  dropitem: {fileID: 4481046976755634792, guid: 3f08ae0bb880bb348ba755a225b6cc0f,
+    type: 3}
   coinbox: 0
 --- !u!82 &6467267603674485334
 AudioSource:

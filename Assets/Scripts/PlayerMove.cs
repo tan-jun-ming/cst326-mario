@@ -31,6 +31,12 @@ public class PlayerMove : MonoBehaviour
         
         if (fps_mode)
         {
+            float jump = Input.GetAxis("Jump");
+
+            if (player.velocity.y == 0)
+            {
+                player.velocity += Vector3.up * jump * 5;
+            }
 
             if (step_cooldown > 0)
             {
@@ -42,7 +48,7 @@ public class PlayerMove : MonoBehaviour
             {
                 translation.Normalize();
             }
-            translation *= 0.3f;
+            translation *= 0.2f;
             Vector3 angle = GameObject.Find("Camera 4").transform.eulerAngles;
             angle.x = 0;
             angle.z = 0;
@@ -68,6 +74,11 @@ public class PlayerMove : MonoBehaviour
 
             player.velocity = velocity;
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ((AudioSource)GameObject.Find("Drop Speaker").GetComponent(typeof(AudioSource))).Play();
+        }
         
 
     }
@@ -81,12 +92,12 @@ public class PlayerMove : MonoBehaviour
 
         ((Renderer)GameObject.Find("Mario").GetComponent(typeof(Renderer))).enabled = !state; // player sprite
 
-        ((MouseLook)GameObject.Find("Camera 4").GetComponent(typeof(MouseLook))).enabled = state; // movement scripts
+        ((MouseLook)GameObject.Find("Camera 4").GetComponent(typeof(MouseLook))).enabled = state; // movement script
 
         if (!state)
         { // reset rotation
-            GameObject.Find("Camera 4").transform.rotation = Quaternion.Euler(0, 0, 0);
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0); ;
+            GameObject.Find("Camera 4").transform.rotation = Quaternion.Euler(0, 180, 0);
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 

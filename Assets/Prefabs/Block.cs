@@ -6,6 +6,7 @@ public class Block : MonoBehaviour
 {
     public int max_durability = 100;
     public int curr_durability;
+    public GameObject dropitem;
 
     public bool coinbox = false;
 
@@ -13,11 +14,14 @@ public class Block : MonoBehaviour
     private Texture blank;
     private AudioClip[] dig_sound;
     private AudioClip[] break_sound;
+    private AudioClip brick_sound;
+    private AudioClip coin_sound;
+
     private bool remain = true;
 
     private int dig_interval = 0;
-    private int death_timer = -1;
 
+    private bool dead = false;
     private bool released = true;
 
     // Start is called before the first frame update
@@ -28,6 +32,8 @@ public class Block : MonoBehaviour
         blank = blockbreaker.blank;
         dig_sound = blockbreaker.dig_sound;
         break_sound = blockbreaker.break_sound;
+        brick_sound = blockbreaker.brick_sound;
+        coin_sound = blockbreaker.coin_sound;
 
         curr_durability = max_durability;
     }
@@ -41,15 +47,6 @@ public class Block : MonoBehaviour
             dig_interval = 0;
         }
 
-        if (death_timer > 0)
-        {
-            death_timer--;
-
-            if (death_timer <= 0)
-            {
-                GameObject.Destroy(gameObject);
-            }
-        }
         if (curr_durability != max_durability)
         {
             int stage = (int)Mathf.Floor(((float)curr_durability / (float)max_durability) * (float)destroy_stage.Length);
@@ -58,12 +55,9 @@ public class Block : MonoBehaviour
 
             if (curr_durability <= 0)
             {
-                play_sound(1);
+                play_sound(1, false);
 
-                ((Renderer)gameObject.GetComponent(typeof(Renderer))).enabled = false;
-                ((Collider)gameObject.GetComponent(typeof(Collider))).enabled = false;
-
-                death_timer = 20;
+                kill_with_delay(true);
             }
         } else if (!remain)
         {
@@ -74,6 +68,26 @@ public class Block : MonoBehaviour
         released = true;
 
     }
+
+    void kill_with_delay(bool drop_item)
+    {
+        if (!dead)
+        {
+            dead = true;
+            ((Renderer)gameObject.GetComponent(typeof(Renderer))).enabled = false;
+            ((Collider)gameObject.GetComponent(typeof(Collider))).enabled = false;
+
+            if (drop_item)
+            {
+                GameObject drop = Instantiate(dropitem, gameObject.transform.position, Quaternion.identity);
+                ((Renderer)drop.transform.GetChild(0).GetComponent(typeof(Renderer))).material = ((Renderer)gameObject.GetComponent(typeof(Renderer))).material;
+            }
+
+            GameObject.Destroy(gameObject, 1f);
+
+        }
+    }
+
     public int damage(int amount)
     {
         if (max_durability > 0)
@@ -84,7 +98,7 @@ public class Block : MonoBehaviour
 
         if (dig_interval == 0)
         {
-            play_sound(0);
+            play_sound(0, false);
         }
 
         dig_interval++;
@@ -93,7 +107,21 @@ public class Block : MonoBehaviour
         return curr_durability;
     }
 
-    void play_sound(int sound_type)
+    public void flat_destroy()
+    {
+        int to_play = 2;
+        if (coinbox)
+        {
+            to_play = 3;
+        } else
+        {
+            kill_with_delay(false);
+        }
+
+        play_sound(to_play, true);
+    }
+
+    void play_sound(int sound_type, bool play_global)
     {
         AudioClip to_play = null;
         float volume = 1f;
@@ -102,10 +130,14 @@ public class Block : MonoBehaviour
         {
             case 0:
                 to_play = dig_sound[Random.Range(0, dig_sound.Length)]; volume = 0.5f;  break;
-            default:
+            case 1:
                 to_play = break_sound[Random.Range(0, break_sound.Length)]; volume = 2.0f; break;
+            case 2:
+                to_play = brick_sound; break;
+            case 3:
+                to_play = coin_sound; break;
         }
-        AudioSource speaker = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
+        AudioSource speaker = ((AudioSource)(play_global ? GameObject.Find("Camera Speaker") : gameObject).GetComponent(typeof(AudioSource)));
         speaker.PlayOneShot(to_play, volume);
     }
 

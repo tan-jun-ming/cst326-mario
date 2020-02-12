@@ -13,11 +13,11 @@ GameObject:
   - component: {fileID: 1692284551718655461}
   - component: {fileID: 3230537822549907052}
   - component: {fileID: 7212934211527418216}
-  - component: {fileID: -3361452147562661975}
+  - component: {fileID: 2988432041820592259}
   - component: {fileID: 3780385894158945572}
   m_Layer: 0
   m_Name: Stone
-  m_TagString: Untagged
+  m_TagString: block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -113,7 +113,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-3361452147562661975
+--- !u!114 &2988432041820592259
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,6 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_durability: -1
   curr_durability: 0
+  dropitem: {fileID: 4481046976755634792, guid: 3f08ae0bb880bb348ba755a225b6cc0f,
+    type: 3}
   coinbox: 0
 --- !u!82 &3780385894158945572
 AudioSource:

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 290265895280213062}
   - component: {fileID: 7267792749146140974}
   - component: {fileID: 568395035886645424}
-  - component: {fileID: 7485295570273422901}
+  - component: {fileID: -5477214701254755615}
   - component: {fileID: 4129451170660755801}
   m_Layer: 0
   m_Name: Coin Box
@@ -113,7 +113,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7485295570273422901
+--- !u!114 &-5477214701254755615
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,6 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_durability: -1
   curr_durability: 0
+  dropitem: {fileID: 4481046976755634792, guid: 3f08ae0bb880bb348ba755a225b6cc0f,
+    type: 3}
   coinbox: 1
 --- !u!82 &4129451170660755801
 AudioSource:

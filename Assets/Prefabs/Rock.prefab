@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 515000545694365313}
   - component: {fileID: 5007496901419361582}
   - component: {fileID: 920388212545013140}
-  - component: {fileID: -5903660102846797802}
+  - component: {fileID: 9059584183795184985}
   - component: {fileID: -3775830675413298032}
   m_Layer: 0
   m_Name: Rock
@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2141764918675126927}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -224, y: 0, z: 1}
+  m_LocalPosition: {x: -224, y: 5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -113,7 +113,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-5903660102846797802
+--- !u!114 &9059584183795184985
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,6 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_durability: 100
   curr_durability: 0
+  dropitem: {fileID: 4481046976755634792, guid: 3f08ae0bb880bb348ba755a225b6cc0f,
+    type: 3}
   coinbox: 0
 --- !u!82 &-3775830675413298032
 AudioSource:

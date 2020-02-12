@@ -1,12 +1,11 @@
 fileFormatVersion: 2
-guid: a1a391cc16928c5419c4cf428f3ea776
+guid: 59558feceb4a21144812065ff450e824
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - dropitem: {fileID: 4481046976755634792, guid: 3f08ae0bb880bb348ba755a225b6cc0f,
-      type: 3}
-  executionOrder: 200
+  - pop_sound: {fileID: 8300000, guid: cea7f4acd0f48484991e17c60b04a8d2, type: 3}
+  executionOrder: 300
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
