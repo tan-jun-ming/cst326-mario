@@ -71,7 +71,7 @@ public class LevelParserStarter : MonoBehaviour
             for (int i = thickness_back; i <= thickness_front; i++)
             {
                 ToSpawn.transform.localPosition = positionToSpawn + Vector3.forward * i;
-                ToSpawn = GameObject.Instantiate(ToSpawn, parentTransform);
+                GameObject.Instantiate(ToSpawn, parentTransform);
             }
 
         }

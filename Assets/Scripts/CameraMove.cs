@@ -4,22 +4,48 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
+    public Camera[] cameras;
+    private int camera_count = -1;
+
+    public Transform player;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        swap_camera();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.D))
-        {
-            gameObject.transform.position += Vector3.left * 0.5f;
-        } else if (Input.GetKey(KeyCode.A))
-        {
-            gameObject.transform.position += Vector3.right * 0.5f;
+        Vector3 new_camera_pos = gameObject.transform.position;
 
+        new_camera_pos.x = player.position.x;
+
+        gameObject.transform.position = new_camera_pos;
+
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            swap_camera();
         }
+    }
+
+    public Camera get_camera()
+    {
+        return cameras[camera_count];
+    }
+    void swap_camera()
+    {
+        camera_count++;
+        camera_count = camera_count % cameras.Length;
+
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            cameras[i].enabled = i == camera_count;
+        }
+
+        ((PlayerMove)player.gameObject.GetComponent(typeof(PlayerMove))).set_fps(camera_count == 3);
+
     }
 }
