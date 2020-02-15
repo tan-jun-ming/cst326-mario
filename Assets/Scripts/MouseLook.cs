@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// https://www.cs.vu.nl/~eliens/media/lib-unity-tutorial-m2h-2-Assets-Standard-Assets-Camera-Scripts-MouseLook.cs
+
+using UnityEngine;
 using System.Collections;
 
 /// MouseLook rotates the transform based on the mouse delta.
@@ -14,6 +16,7 @@ using System.Collections;
 /// - Create a camera. Make the camera a child of the capsule. Reset it's transform.
 /// - Add a MouseLook script to the camera.
 ///   -> Set the mouse look to use LookY. (You want the camera to tilt up and down like a head. The character already turns.)
+
 [AddComponentMenu("Camera-Control/Mouse Look")]
 public class MouseLook : MonoBehaviour
 {

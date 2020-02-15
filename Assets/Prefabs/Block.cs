@@ -17,6 +17,8 @@ public class Block : MonoBehaviour
     private AudioClip brick_sound;
     private AudioClip coin_sound;
 
+    private UIManager uimanager;
+
     private bool remain = true;
 
     private int dig_interval = 0;
@@ -27,6 +29,8 @@ public class Block : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        uimanager = ((UIManager)GameObject.Find("UIManager").GetComponent(typeof(UIManager)));
+
         BlockBreaker blockbreaker = (BlockBreaker)GameObject.Find("BlockBreaker").GetComponent(typeof(BlockBreaker));
         destroy_stage = blockbreaker.destroy_stage;
         blank = blockbreaker.blank;
@@ -113,8 +117,10 @@ public class Block : MonoBehaviour
         if (coinbox)
         {
             to_play = 3;
+            uimanager.add_coins(1);
         } else
         {
+            uimanager.add_score(50);
             kill_with_delay(false);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -87,7 +88,8 @@ public class PlayerMove : MonoBehaviour
     {
         fps_mode = state;
 
-        ((Canvas)GameObject.Find("Canvas").GetComponent(typeof(Canvas))).enabled = state; // crosshair
+        ((Canvas)GameObject.Find("Crosshair Canvas").GetComponent(typeof(Canvas))).enabled = state; // crosshair;
+        ((Canvas)GameObject.Find("Text Canvas").GetComponent(typeof(Canvas))).enabled = !state; // crosshair;
         Cursor.lockState = state ? CursorLockMode.Locked : CursorLockMode.None; // hidden cursor
 
         ((Renderer)GameObject.Find("Mario").GetComponent(typeof(Renderer))).enabled = !state; // player sprite
@@ -97,7 +99,6 @@ public class PlayerMove : MonoBehaviour
         if (!state)
         { // reset rotation
             GameObject.Find("Camera 4").transform.rotation = Quaternion.Euler(0, 180, 0);
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
