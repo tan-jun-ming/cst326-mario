@@ -4,76 +4,68 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    public int max_durability = 100;
-    public int curr_durability;
-    public GameObject dropitem;
 
-    public bool coinbox = false;
+    public enum BlockType {Coin, Coinbox, BreakableBlock, UnbreakableBlock };
+    public BlockType blocktype;
 
-    private Texture[] destroy_stage;
-    private Texture blank;
-    private AudioClip[] dig_sound;
-    private AudioClip[] break_sound;
     private AudioClip brick_sound;
     private AudioClip coin_sound;
 
+    private Texture hitblock;
+    private Texture[] coin_anim;
+
     private UIManager uimanager;
 
-    private bool remain = true;
-
-    private int dig_interval = 0;
-
     private bool dead = false;
-    private bool released = true;
+
+    private ParticleSystem ps;
+
+    private int coin_anim_counter = 0;
+    private int coin_anim_counter_max = 16; // how many frames
+    private int coin_anim_frame_counter = 0;
+    private int coin_anim_frame_counter_max = 8; // how long each frame is
+    private int coin_anim_frame_index_counter = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
         uimanager = ((UIManager)GameObject.Find("UIManager").GetComponent(typeof(UIManager)));
 
+        if (gameObject.transform.childCount > 0)
+        {
+            ps = (ParticleSystem)gameObject.transform.GetChild(0).GetComponent(typeof(ParticleSystem));
+        }
+
         BlockBreaker blockbreaker = (BlockBreaker)GameObject.Find("BlockBreaker").GetComponent(typeof(BlockBreaker));
-        destroy_stage = blockbreaker.destroy_stage;
-        blank = blockbreaker.blank;
-        dig_sound = blockbreaker.dig_sound;
-        break_sound = blockbreaker.break_sound;
         brick_sound = blockbreaker.brick_sound;
         coin_sound = blockbreaker.coin_sound;
-
-        curr_durability = max_durability;
+        hitblock = blockbreaker.hitblock;
+        coin_anim = blockbreaker.coin_anim;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (released)
+        if (coin_anim_counter > 0)
         {
-            curr_durability = max_durability;
-            dig_interval = 0;
-        }
-
-        if (curr_durability != max_durability)
-        {
-            int stage = (int)Mathf.Floor(((float)curr_durability / (float)max_durability) * (float)destroy_stage.Length);
-            set_texture(destroy_stage[destroy_stage.Length-1-stage]);
-            remain = false;
-
-            if (curr_durability <= 0)
+            if (coin_anim_frame_counter <= 0)
             {
-                play_sound(1, false);
+                int ind = coin_anim_frame_index_counter;
+                Texture new_texture = coin_anim[ind];
+                ((ParticleSystemRenderer)gameObject.transform.GetChild(0).GetComponent(typeof(ParticleSystemRenderer))).material.SetTexture("_MainTex", new_texture);
 
-                kill_with_delay(true);
+                coin_anim_frame_counter = coin_anim_frame_counter_max;
+                coin_anim_counter--;
+                coin_anim_frame_index_counter = (coin_anim_frame_index_counter + 1) % coin_anim.Length;
+
             }
-        } else if (!remain)
-        {
-            set_texture(blank);
-            remain = true;
+
+            coin_anim_frame_counter--;
         }
-
-        released = true;
-
     }
 
-    void kill_with_delay(bool drop_item)
+    void kill_with_delay()
     {
         if (!dead)
         {
@@ -81,74 +73,78 @@ public class Block : MonoBehaviour
             ((Renderer)gameObject.GetComponent(typeof(Renderer))).enabled = false;
             ((Collider)gameObject.GetComponent(typeof(Collider))).enabled = false;
 
-            if (drop_item)
-            {
-                GameObject drop = Instantiate(dropitem, gameObject.transform.position, Quaternion.identity);
-                ((Renderer)drop.transform.GetChild(0).GetComponent(typeof(Renderer))).material = ((Renderer)gameObject.GetComponent(typeof(Renderer))).material;
-            }
-
-            GameObject.Destroy(gameObject, 1f);
+            GameObject.Destroy(gameObject, 10f);
 
         }
-    }
-
-    public int damage(int amount)
-    {
-        if (max_durability > 0)
-        {
-            curr_durability -= amount;
-            released = false;
-        }
-
-        if (dig_interval == 0)
-        {
-            play_sound(0, false);
-        }
-
-        dig_interval++;
-        dig_interval = dig_interval % 15;
-
-        return curr_durability;
     }
 
     public void flat_destroy()
     {
-        int to_play = 2;
-        if (coinbox)
+        int to_play = 1;
+        if (blocktype == BlockType.Coinbox || blocktype == BlockType.Coin)
         {
             to_play = 3;
             uimanager.add_coins(1);
-        } else
+
+            if (blocktype == BlockType.Coin)
+            {
+                kill_with_delay();
+            } else
+            {
+                blocktype = BlockType.UnbreakableBlock;
+                ((Renderer)gameObject.GetComponent(typeof(Renderer))).material.SetTexture("_MainTex", hitblock);
+
+                ParticleSystem.EmitParams ep = new ParticleSystem.EmitParams();
+                ep.velocity = Vector3.forward * 6f;
+
+                ps.Emit(ep, 1);
+
+                coin_anim_counter = coin_anim_counter_max;
+                coin_anim_frame_counter = coin_anim_frame_counter_max;
+
+            }
+        } else if (blocktype == BlockType.BreakableBlock)
         {
-            uimanager.add_score(50);
-            kill_with_delay(false);
+            to_play = 2;
+
+            uimanager.add_score(100);
+            ParticleSystem.EmitParams ep = new ParticleSystem.EmitParams();
+
+
+            ep.position = Vector3.forward * 1f;
+            for (int i=0; i<4; i++)
+            {
+                float vertical_dir = i % 2 == 0 ? 5 : 3;
+                float horizontal_dir = 1.5f * (i / 2 == 0 ? 1 : -1);
+
+                ep.velocity = (Vector3.forward + Vector3.up * vertical_dir + Vector3.left * horizontal_dir);
+                ep.angularVelocity = Random.Range(0, 2) == 0 ? 90f : -90f;
+                ep.rotation = Random.Range(0f, 359f);
+
+                ps.Emit(ep, 1);
+            }
+
+            kill_with_delay();
         }
 
-        play_sound(to_play, true);
+        play_sound(to_play);
     }
 
-    void play_sound(int sound_type, bool play_global)
+    void play_sound(int sound_type)
     {
         AudioClip to_play = null;
         float volume = 1f;
 
         switch (sound_type)
         {
-            case 0:
-                to_play = dig_sound[Random.Range(0, dig_sound.Length)]; volume = 0.5f;  break;
             case 1:
-                to_play = break_sound[Random.Range(0, break_sound.Length)]; volume = 2.0f; break;
+                return; // play nothing
             case 2:
                 to_play = brick_sound; break;
             case 3:
                 to_play = coin_sound; break;
         }
-        AudioSource speaker = ((AudioSource)(play_global ? GameObject.Find("Camera Speaker") : gameObject).GetComponent(typeof(AudioSource)));
+        AudioSource speaker = ((AudioSource)GameObject.Find("Camera Stand").GetComponent(typeof(AudioSource)));
         speaker.PlayOneShot(to_play, volume);
-    }
-
-    void set_texture(Texture tex)
-    {
-        ((Renderer)gameObject.GetComponent(typeof(Renderer))).materials[1].SetTexture("_MainTex", tex);
     }
 }

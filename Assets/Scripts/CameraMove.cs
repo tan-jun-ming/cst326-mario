@@ -20,7 +20,7 @@ public class CameraMove : MonoBehaviour
     {
         Vector3 new_camera_pos = gameObject.transform.position;
 
-        new_camera_pos.x = player.position.x;
+        new_camera_pos.x = Mathf.Max(-222f, player.position.x);
 
         gameObject.transform.position = new_camera_pos;
 
@@ -44,8 +44,6 @@ public class CameraMove : MonoBehaviour
         {
             cameras[i].enabled = i == camera_count;
         }
-
-        ((PlayerMove)player.gameObject.GetComponent(typeof(PlayerMove))).set_fps(camera_count == 3);
 
     }
 }

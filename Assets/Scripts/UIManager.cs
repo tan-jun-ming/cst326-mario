@@ -11,10 +11,11 @@ public class UIManager : MonoBehaviour
     public Text score_display;
     public Text coins_display;
     public Text timer_display;
+    public Text gameover_display;
 
     private int score = 0;
     private int coins = 0;
-    private int total_time = 300;
+    private int total_time = 101;
 
     // Start is called before the first frame update
     void Start()
@@ -27,13 +28,18 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         update_display();
+
+        if (total_time - Time.time <= 0)
+        {
+            ((PlayerMove)GameObject.Find("Player").GetComponent(typeof(PlayerMove))).die();
+        }
     }
 
     void update_display()
     {
         score_display.text = score.ToString().PadLeft(6, "0"[0]);
         coins_display.text = coins.ToString().PadLeft(2, "0"[0]);
-        timer_display.text = ((int)(total_time-Time.time)).ToString().PadLeft(3, "0"[0]);
+        timer_display.text = (Mathf.Max(0, (int)(total_time-Time.time))).ToString().PadLeft(3, "0"[0]);
     }
 
     public void add_score(int amount)
@@ -44,5 +50,10 @@ public class UIManager : MonoBehaviour
     {
         coins += amount;
         add_score(amount * 200);
+    }
+
+    public void game_over()
+    {
+        gameover_display.enabled = true;
     }
 }

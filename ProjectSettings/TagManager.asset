@@ -5,7 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - block
-  - coinbox
+  - death
+  - flag
   layers:
   - Default
   - TransparentFX
