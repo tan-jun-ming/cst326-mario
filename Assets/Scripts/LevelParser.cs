@@ -11,6 +11,7 @@ public class LevelParser : MonoBehaviour
     public GameObject Brick;
     public GameObject Coin;
     public GameObject CoinBox;
+    public GameObject Kaizo;
     public GameObject Stone;
     public GameObject Water;
     public GameObject Background;
@@ -57,6 +58,7 @@ public class LevelParser : MonoBehaviour
         GameObject ToSpawn = null;
         int thickness = 0;
         bool solid = true;
+        int coin_amount = 0;
 
         int col = (int)Mathf.Abs(positionToSpawn.x);
 
@@ -70,8 +72,11 @@ public class LevelParser : MonoBehaviour
         switch (spot)
         {
             case 'b': ToSpawn = Brick; break;
+            case 'B': ToSpawn = Brick; coin_amount = 3; break;
             case 'c': ToSpawn = Coin; solid = false; break;
             case '?': ToSpawn = CoinBox; break;
+            case '!': ToSpawn = CoinBox; coin_amount = 5; break;
+            case 'k': ToSpawn = Kaizo; break;
             case 'x': ToSpawn = Rock; thickness = 1; break;
             case 's': ToSpawn = Stone; thickness = 1; break;
             case 'w': ToSpawn = Water; thickness = 1; break;
@@ -97,6 +102,11 @@ public class LevelParser : MonoBehaviour
                     ParticleSystem.EmissionModule em = ps.emission;
                     em.enabled = false;
 
+                }
+
+                if (coin_amount > 0)
+                {
+                    ((Block)new_obj.GetComponent(typeof(Block))).coin_amount = coin_amount;
                 }
             }
 

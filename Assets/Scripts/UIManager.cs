@@ -15,7 +15,9 @@ public class UIManager : MonoBehaviour
 
     private int score = 0;
     private int coins = 0;
-    private int total_time = 101;
+    private int total_time = 999;
+    //private int total_time = 101;
+    //private int total_time = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +51,7 @@ public class UIManager : MonoBehaviour
     public void add_coins(int amount)
     {
         coins += amount;
-        add_score(amount * 200);
+        add_score(amount * 100);
     }
 
     public void game_over()

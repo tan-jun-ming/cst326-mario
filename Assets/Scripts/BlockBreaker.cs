@@ -13,6 +13,8 @@ public class BlockBreaker : MonoBehaviour
     public Texture hitblock;
     public Texture[] coin_anim;
 
+    public Material debris;
+
     private int break_cooldown = 0;
     // Start is called before the first frame update
     void Start()
@@ -48,5 +50,13 @@ public class BlockBreaker : MonoBehaviour
 
         blockscript.flat_destroy();
         
+    }
+
+    public void entered_trigger(Transform block)
+    {
+        Block blockscript = ((Block)block.gameObject.GetComponent(typeof(Block)));
+
+        blockscript.entered_trigger();
+
     }
 }

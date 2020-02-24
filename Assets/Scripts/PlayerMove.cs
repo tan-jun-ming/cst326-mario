@@ -152,10 +152,10 @@ public class PlayerMove : MonoBehaviour
                 float distance = 0.1f;
 
                 bool to_jump = false;
-                for (int i= -1; i < 1; i++)
+                for (int i= -1; i <= 1; i++)
                 {
                     // Raycast to check if grounded
-                    if (Physics.Raycast(feetpos + Vector3.right * i, Vector3.down, distance))
+                    if (Physics.Raycast(feetpos + (Vector3.right * (i * boxsize)), Vector3.down, distance))
                     {
                         to_jump = true;
                         break;
@@ -244,7 +244,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (collider.CompareTag("block"))
         {
-            blockbreaker.break_block(collider.transform);
+            blockbreaker.entered_trigger(collider.transform);
         }
     }
 
